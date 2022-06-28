@@ -1,7 +1,6 @@
 package main
 
 import (
-	"Q2Bank/src/api/config"
 	"Q2Bank/src/rest"
 	"Q2Bank/src/utils"
 	"log"
@@ -27,7 +26,6 @@ func main() {
 		log.Printf("Defaulting to port %s", port)
 
 	}
-	config.Carregar()
 
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)

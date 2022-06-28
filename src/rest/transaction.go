@@ -14,7 +14,6 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithError(w, http.StatusMethodNotAllowed, 0, "Metodo nao permitido!")
 		return
 	}
-
 	var transac service.TransactionRequest
 
 	body, err := ioutil.ReadAll(r.Body)
@@ -27,7 +26,6 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 		utils.RespondWithError(w, http.StatusInternalServerError, 0, "Erro ao executar Unmarshall do JSON")
 		return
 	}
-
 	err = service.MakeTransaction(transac)
 	if err != nil {
 		utils.RespondWithError(w, http.StatusBadRequest, 0, err.Error())

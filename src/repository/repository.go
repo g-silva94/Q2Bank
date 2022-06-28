@@ -1,10 +1,8 @@
 package repository
 
 import (
-	"Q2Bank/src/api/config"
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -33,7 +31,7 @@ func MakeTransaction(payer Usuario, payee Usuario, transaction Transacao) error 
 
 	conn, err := conectionDB()
 	if err != nil {
-		return err
+		return fmt.Errorf("teste1: %v", err)
 	}
 	defer conn.Close()
 
@@ -104,17 +102,12 @@ func GetUser(id int64) (Usuario, error) {
 
 	conn, err := conectionDB()
 	if err != nil {
-		return user, err
+		return user, fmt.Errorf("Caiu aqui: %v", err)
 	}
 	defer conn.Close()
 
-	rows, err := conn.Query("SELECT ID, Nome, Sobrenome, Email, CPFCNPJ, Senha, Saldo, Tipo FROM User WHERE ID=%v", id)
-	if err != nil {
-		return user, err
-	}
-	for rows.Next() {
-		rows.Scan(&user.ID, &user.Nome, &user.Sobrenome, &user.Email, &user.CPFCNPJ, &user.Senha, &user.Saldo, &user.Tipo)
-	}
+	rows := conn.QueryRow("SELECT ID, Nome, Sobrenome, Email, CPFCNPJ, Senha, Saldo, Tipo FROM User WHERE ID=%v", id)
+	rows.Scan(&user.ID, &user.Nome, &user.Sobrenome, &user.Email, &user.CPFCNPJ, &user.Senha, &user.Saldo, &user.Tipo)
 
 	return user, nil
 
@@ -122,13 +115,24 @@ func GetUser(id int64) (Usuario, error) {
 
 func conectionDB() (*sql.DB, error) {
 
-	db, err := sql.Open("postgres", config.PostgresConnection)
+	var (
+		err error
+	)
+
+	// postgresConnection := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
+	// 	os.Getenv("POSTGRES_HOST"),
+	// 	os.Getenv("POSTGRES_PORT"),
+	// 	os.Getenv("POSTGRES_USER"),
+	// 	os.Getenv("POSTGRES_PASSWORD"),
+	// 	os.Getenv("POSTGRES_DB"),
+	// )
+
+	// "postgres", "host=localhost port=15432 user=postgres password=master dbname=postgresql sslmode=disable"
+
+	db, err := sql.Open("postgres", "host=0.0.0.0 port=5432 user=admin password=admin dbname=q2Teste sslmode=disable")
 	if err != nil {
-		log.Printf("Conexão Postgres: %v", config.PostgresConnection)
 		return nil, err
 	}
-
-	defer db.Close()
 
 	if err = db.Ping(); err != nil {
 		return nil, err
