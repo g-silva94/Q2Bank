@@ -33,7 +33,7 @@ func MakeTransaction(payer Usuario, payee Usuario, transaction Transacao) error 
 
 	conn, err := conectionDB()
 	if err != nil {
-		return fmt.Errorf("teste1: %v", err)
+		return err
 	}
 	defer conn.Close()
 
