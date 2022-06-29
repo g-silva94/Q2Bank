@@ -32,10 +32,12 @@ Deixei alguns Usuários já criados, é possivel visualizá-los no Banco de Dado
 
 Endpoint para testar as transações - http://localhost:8080/transaction
 Payload: 
+
 ```{
     "value": ,
     "payee": ,
     "payer": 
-}```
+}
+```
 
 Utilizei uma arquitetura de monolito pois é algo que já estava mais habituado em codificar, tive alguns problemas durante o desenvolvimento por estar utilizando ambiente Windows e com me demandou mais tempo para a entrega do desafio. Esse desafio da Q2Bank de fato foi um desafio, por nunca ter usado o Postgres e também em um ambiente docker no Windows.
