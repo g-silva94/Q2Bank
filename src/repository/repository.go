@@ -3,8 +3,10 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -57,7 +59,7 @@ func MakeTransaction(payer Usuario, payee Usuario, transaction Transacao) error 
 		return fmt.Errorf("Nenhuma transacao inserida")
 	}
 
-	querySaque := fmt.Sprintf("UPDATE User set Saldo = (Saldo-%v) WHERE ID = %v", transaction.Valor, transaction.IDOrigem)
+	querySaque := fmt.Sprintf("UPDATE Usuarios set Saldo = (Saldo-%v) WHERE ID = %v", transaction.Valor, transaction.IDOrigem)
 
 	resultSaque, err := tx.Exec(querySaque)
 	if err != nil {
@@ -75,7 +77,7 @@ func MakeTransaction(payer Usuario, payee Usuario, transaction Transacao) error 
 		return fmt.Errorf("Nenhum pagador encontrado")
 	}
 
-	queryDeposito := fmt.Sprintf("UPDATE User set Saldo = (Saldo+%v) WHERE ID = %v", transaction.Valor, transaction.IDDestino)
+	queryDeposito := fmt.Sprintf("UPDATE Usuarios set Saldo = (Saldo+%v) WHERE ID = %v", transaction.Valor, transaction.IDDestino)
 
 	resultDeposito, err := tx.Exec(queryDeposito)
 	if err != nil {
@@ -102,11 +104,11 @@ func GetUser(id int64) (Usuario, error) {
 
 	conn, err := conectionDB()
 	if err != nil {
-		return user, fmt.Errorf("Caiu aqui: %v", err)
+		return user, err
 	}
 	defer conn.Close()
 
-	rows := conn.QueryRow("SELECT ID, Nome, Sobrenome, Email, CPFCNPJ, Senha, Saldo, Tipo FROM User WHERE ID=%v", id)
+	rows := conn.QueryRow("SELECT ID, Nome, Sobrenome, Email, CPFCNPJ, Senha, Saldo, Tipo FROM Usuarios WHERE ID=$1", id)
 	rows.Scan(&user.ID, &user.Nome, &user.Sobrenome, &user.Email, &user.CPFCNPJ, &user.Senha, &user.Saldo, &user.Tipo)
 
 	return user, nil
@@ -115,21 +117,20 @@ func GetUser(id int64) (Usuario, error) {
 
 func conectionDB() (*sql.DB, error) {
 
-	var (
-		err error
+	err := godotenv.Load()
+	if err != nil {
+		return nil, err
+	}
+
+	postgresConnection := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
+		os.Getenv("POSTGRES_HOST"),
+		os.Getenv("POSTGRES_PORT"),
+		os.Getenv("POSTGRES_USER"),
+		os.Getenv("POSTGRES_PASSWORD"),
+		os.Getenv("POSTGRES_DB"),
 	)
 
-	// postgresConnection := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=disable",
-	// 	os.Getenv("POSTGRES_HOST"),
-	// 	os.Getenv("POSTGRES_PORT"),
-	// 	os.Getenv("POSTGRES_USER"),
-	// 	os.Getenv("POSTGRES_PASSWORD"),
-	// 	os.Getenv("POSTGRES_DB"),
-	// )
-
-	// "postgres", "host=localhost port=15432 user=postgres password=master dbname=postgresql sslmode=disable"
-
-	db, err := sql.Open("postgres", "host=0.0.0.0 port=5432 user=admin password=admin dbname=q2Teste sslmode=disable")
+	db, err := sql.Open("postgres", postgresConnection)
 	if err != nil {
 		return nil, err
 	}

@@ -65,6 +65,8 @@ func MakeTransaction(req TransactionRequest) error {
 	}
 
 	if payer.Saldo < req.Value {
+		// return fmt.Errorf("Valor de Payer.Saldo: %v", payer.Saldo) = 0
+		// return fmt.Errorf("Valor de Req.Value: %v", req.Value) = 1150
 		return fmt.Errorf("Você não possui saldo suficiente!")
 	}
 

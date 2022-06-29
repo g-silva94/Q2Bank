@@ -4,6 +4,7 @@ import (
 	"Q2Bank/src/service"
 	"Q2Bank/src/utils"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 )
@@ -32,6 +33,7 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("Transação feita com sucesso!")
 	utils.RespondWithJSON(w, http.StatusOK, transac)
 	return
 
