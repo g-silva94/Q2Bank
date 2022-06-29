@@ -3,7 +3,7 @@
 
 ## Requisitos:
 
-Essa aplicação requer a versão 1.18.2+ do [Golang]((https://go.dev/doc/install) instalado e também do [Docker Compose](https://docs.docker.com/compose/install/).
+Essa aplicação requer a versão 1.18.2+ do [Golang](https://go.dev/doc/install) instalado e também do [Docker Compose](https://docs.docker.com/compose/install/).
 Instale as dependências e para rodar a aplicação use o passo-a-passo abaixo:
 
 ### Passo 1:
@@ -33,7 +33,8 @@ Deixei alguns Usuários já criados, é possivel visualizá-los no Banco de Dado
 Endpoint para testar as transações - http://localhost:8080/transaction
 Payload: 
 
-```{
+```
+{
     "value": ,
     "payee": ,
     "payer": 
