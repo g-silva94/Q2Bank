@@ -31,8 +31,8 @@ Requisições para a API devem seguir os padrões:
 Deixei alguns Usuários já criados, é possivel visualizá-los no Banco de Dados Postgres para efeito de testes, e o schema na pasta cmd/schema.sql.
 
 Endpoint para testar as transações - http://localhost:8080/transaction
-Payload: 
 
+Payload: 
 ```
 {
     "value": ,
